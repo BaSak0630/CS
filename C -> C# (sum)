@@ -1,0 +1,53 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+// 강의 주제 : C로 작성된 getSum() 함수를  C#으로 만들어 보기
+//
+//자동할당 복습
+//namespace : namespace안에는 여러개의 클래스를 포함할수 있다. 
+//class
+//command line argument: 고급C프로그래밍 - 12-2-2차원 배열 동적 할당
+//command line argument 는 argc,argv와 같음
+// ex) 
+//main(int argc,char* argv[])
+//{
+//}
+// C#에서 함수는 두가지로 나누어진다.
+//static function : C에서는 전역함수를 의미한다.
+//member function : class에서 설명함
+//
+// C언어의 함수를 C#에서 사용할때는 반드시 특정 클래스 안에 정의해주어야 한다.
+
+namespace GetSumTest
+{
+    class Program
+    {
+        static int getSum(int n) //static를 반드시 적어주어야 한다.
+        {
+            int total = 0;
+            int i;
+
+            if(n <= 0)
+            {
+                Console.WriteLine("Please use positive numbver.");
+                Environment.Exit(-1);
+            }
+         for(i = 1; i <= n; i++)
+         {
+              total = total + i;
+         }
+    return total;
+    }
+
+        static void Main(string[] args)
+        {
+            int sum;
+
+            sum = Program.getSum(100); 
+            //전역함수를 호출할때 무슨클래스에 존재하는지 적어주어야 함
+            Console.WriteLine("sum = " + sum);
+        }
+    }
+}
