@@ -35,6 +35,17 @@ using System.Threading.Tasks;
  * f(1) = 1 when n = 1
  * f(0) = 1 when n = 0
  * boundary condition 는 위의 조건처럼 recursive function이 무한 루프의 빠지지 않게 하기 위한것이다.
+ 
+ * 자동할당 메카니즘 이해 
+ * 프로그램의 빠르기 척도
+ * complexity : O(1)[오덜오브원 딱 그만큼의 시간] 
+ *              O(log(n))[오덜오브 로그 엔 로그엔만큼의 시간이 소요]
+ *              O(n) [오덜오브 엔 데이터의 갯수의 비례하여 선형적으로 증가한다.]      
+ *              O(n+log(n))[오덜오브 엔 로그엔]
+ *              O(n*n)[오덜오브 엔 스쿼어 급격한 증가]
+ * 
+ * time complextiy: O(n*n) 
+ * space compleity: O(n)
  */
 
 namespace Fibo
