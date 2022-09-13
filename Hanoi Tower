@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+/*
+ * Hanoi tower 문제
+ * 조건 1. 한번에 한 개만 이동가능
+ * 조건2. 작은 돌 위에 큰돌을 얹을 수 없음
+ * 
+ * functional abstraction(함수 추상화): 내가 해결해야 하는 작업을 한줄로 요약해서 함수이름과 변수로 표현하기
+ * moveHanoi(n,from,tmp,to);
+ * ex) moveHanoi(5,'A','B','C'); // 5개를 A 라는 곳에서 B를 거쳐 C라는 곳으로 움직인다.
+ * n개를 해결하기 전에 n-1개를 tmp로 움기고 나머지를 c로 움직이는 것을 반복
+ * 
+ * void moveHanoi(int n, char from, char temp, char to)
+ * {
+ *      만약 n = 1 이면, from => to
+ *      아니면 
+ *              moveHanoi(n-1,from,to,temp);
+ *              moveHanoi(1,from,temp,to);
+ *              moveHanoi(n-1,temp,from,to);
+ * }
+ */
+namespace HanoiTower
+{
+    class Program
+    {
+
+        static void moveHanoi(int n, char from, char temp, char to)
+        {
+            Console.WriteLine("n = {0}, from = {1}, temp = {2}, to = {3}", n, from, temp, to);
+            if (n == 1)
+            {
+                Console.WriteLine(from + "=>" + to);
+               
+                return;
+            }
+            moveHanoi(n - 1, from, to, temp);
+            moveHanoi(1, from, temp, to);
+            moveHanoi(n - 1, temp, from, to);
+
+        }
+        static void Main(string[] args)
+        {
+
+            Console.WriteLine("탑의 층수를 입력해수세요:");
+            int count = int.Parse(Console.ReadLine());
+            
+            moveHanoi(count, 'A', 'B', 'C');
+        }
+           
+    }
+}
+           
