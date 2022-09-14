@@ -1,0 +1,262 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HanoiTower2
+{
+    class Program
+    {
+        static void printHanoi(int n, int[,] arr)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                Console.WriteLine("{0}{1}{2}", arr[i, 0], arr[i, 1], arr[i, 2]);
+
+
+            }
+            
+            return ;
+        }
+        static void move(int n, char from, char temp, char to, int[,] arr)
+        {
+            int floor = n;
+
+             if(from == '1')
+                {
+                    if(to == '2')
+                    {
+                        swapHanoi(1, floor, arr);
+                        
+                    }
+                    else if(to == '3')
+                    {
+                        swapHanoi(2, floor, arr);
+                        
+                    }
+
+                }
+                else if(from == '2')
+                {
+                    if(to == '1')
+                    {
+                        swapHanoi(3, floor, arr);
+                       
+                    }
+                    else if(to == '3')
+                    {
+                        swapHanoi(4, floor, arr);
+                       
+                    }
+                }
+                else if(from == '3')
+                {
+                    if(to == '1')
+                    {
+                        swapHanoi(5, floor, arr);
+                       
+                    }
+                    else if (to == '2')
+                    {
+                        swapHanoi(6 , floor, arr);
+                    }
+                }
+            return;
+        }
+
+        static void moveHanoi(int n, char from, char temp, char to,int [,]arr)
+        {
+            int floor = n;
+            if (n == 1)
+            {
+                move(floor, from, temp, to, arr);
+                return;
+            }
+            moveHanoi(n - 1, from, to, temp,arr);
+            moveHanoi(1, from, temp, to,arr);
+            moveHanoi(n - 1, temp, from, to, arr);
+
+           
+        }
+
+        static void swapHanoi(int c,int n,int[,] arr)
+        {
+            int hanoiCsae = c;
+
+            int floor = n;
+
+            int tmp = 0;
+
+            if(hanoiCsae== 1)
+            {
+
+                for (int i = 0; i < floor; i++)
+                {
+                    if (arr[i,0] == 1)
+                    {
+
+                        for (int j = floor - 1; j >= 0; j--)
+                        {
+                            
+                            if(arr[j,1] == 0)
+                            {
+                                Console.WriteLine("1");       
+                                tmp = arr[i,0];
+                                arr[i,0] = arr[j, 1];
+                                arr[j,1] = tmp;
+                                printHanoi(floor, arr);
+                               
+                            }
+                         }
+                    }
+                }
+            }
+            else if(hanoiCsae== 2)
+            {
+
+                for (int i = 0; i < floor; i++)
+                 {
+                      if (arr[i,0] == 1)
+                      {
+                          for (int j = floor - 1; j >= 0; j--)
+                         {
+                            if(arr[j,2] == 0)
+                            {
+                                tmp = arr[i, 0];
+                                arr[i,0] = arr[j,2];
+                                arr[j,2] = tmp;
+                                printHanoi(floor, arr);
+                          
+                            }
+                         }
+                      }
+                 }
+             }
+             else if(hanoiCsae== 3)
+             {
+
+                 for (int i = 0; i < floor; i++)
+                  {
+                      if(arr[i,1] == 1)
+                      {
+                          for (int j = floor - 1; j >= 0; j--)
+                          {
+                              if(arr[j,0] == 0)
+                              {
+                                  tmp = arr[i,1];
+                                  arr[i,1] = arr[j,0];
+                                  arr[j,0] = tmp;
+                                  printHanoi(floor, arr);
+                                  
+                              }
+                          }
+                       }
+                   }
+              }
+              else if(hanoiCsae== 4)
+              {
+
+                  for (int i = 0; i < floor; i++)
+                  {
+                      if(arr[i, 1] == 1)
+                      {
+                          for (int j = floor - 1; j >= 0; j--)
+                          {
+                              if(arr[j,2] == 0)
+                              {
+                                  tmp = arr[i,1];
+                                  arr[i,1] = arr[j,2];
+                                  arr[j,2] = tmp;
+                                  printHanoi(floor, arr);
+                                
+                              }
+                          }
+                      }
+                  }
+               }
+               else if(hanoiCsae== 5)
+               {
+
+                   for (int i = 0; i < floor; i++)
+                  {
+                     if(arr[i,2] == 1)
+                     {
+                         for (int j = floor - 1; j >= 0; j--)
+                          {
+                              if (arr[j,0] == 0)
+                              {
+                                  tmp = arr[i,2];
+                                  arr[i,2] = arr[j,0];
+                                  arr[j,0] = tmp;
+                                  printHanoi(floor, arr);
+                                
+                              }
+                          }
+                      }
+                  }
+                }
+                else if (hanoiCsae == 6)
+                {
+
+                    for (int i = 0; i < floor; i++)
+                    {
+                        if (arr[i,2] == 1)
+                        {
+                            for (int j = floor - 1; j >= 0; j--)
+                            {
+                                if(arr[j, 1] == 0)
+                                {
+                                    tmp = arr[i,2];
+                                    arr[i,2] = arr[j,1];
+                                    arr[j,1] = tmp;
+                                    printHanoi(floor, arr);
+
+                                }
+                            }
+                        }
+                    }
+                }
+            
+            return ;
+        }
+
+        static int[,] creativeArr(int n)
+        {
+            int[,] HanoiArr = new int[n,3];
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    if (j == 0)
+                    {
+                        HanoiArr[i,j] = 1;
+                    }
+                    else
+                    {
+                        HanoiArr[i,j] = 0;
+                    }
+
+                }
+            }
+            for (int i = 0; i < n; i++)
+            {
+                Console.WriteLine("{0}{1}{2}", HanoiArr[i, 0], HanoiArr[i, 1], HanoiArr[i, 2]);
+                
+
+            }
+            return HanoiArr;
+        }
+        static void Main(string[] args)
+        {
+            int floor = int.Parse(Console.ReadLine());
+
+            int[,] HanoiArr = creativeArr(floor);
+
+            moveHanoi(floor, '1', '2', '3', HanoiArr);
+          
+
+        }
+    }
+}
