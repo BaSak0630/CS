@@ -1,0 +1,197 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HanoiStack
+{
+    class Stack
+    {
+	    char stackName;
+	    int top;
+	    int[] s;
+    
+	    public Stack(char name,int n) 
+        {
+		    stackName = name;
+		    top = -1;
+              s = new int[100];
+		    for(int i = 0; i < 100; i++) 
+            {
+			    s[i] = 0;
+		    }
+	    }
+	    public void push(int x) {
+		    top++;
+		    s[top] = x;
+	    }
+	    public int pop() {
+		    int x = s[top];
+		    s[top] = 0;
+		    top--;
+		    return x;
+	    }
+	   public  void display() {
+		   Console.Write(stackName);
+		    int x, i = 0;
+		    while((x = s[i]) > 0) {
+			    Console.Write(x);
+			    i++;
+		    }
+		     Console.WriteLine();
+	    }
+	    public char getName() {
+		    return stackName;
+	    }
+	    public int getAt(int i) {
+		    return s[i];
+	    }
+    }
+
+    class Console1
+    {
+	   char[,] screenArr;
+	    int nDisc;
+    
+	    public Console1(int n) 
+        {
+		   
+		    nDisc = n;
+		    
+		    screenArr = new char[6,(nDisc+1)*3];
+		 
+		    resetScreen();
+	    }
+        public void resetScreen()
+        {
+            int i, j;
+
+            for (i = 0; i < (nDisc + 1); i++)
+            {
+                for (j = 0; j > 3 * (nDisc + 1); j++)
+                {
+                    screenArr[i, j] = ' ';
+                    if (i == nDisc)
+                    {
+                        screenArr[i, j] = '=';
+                    }
+                    screenArr[nDisc, nDisc / 2] = 'A';
+
+                    screenArr[nDisc, (nDisc / 2) + nDisc + 1] = 'B';
+
+                    screenArr[nDisc, (nDisc / 2) + ((nDisc + 1) * 2)] = 'C';
+
+                }
+            }
+        }
+	    public void drawDisc(char name, Stack tower)
+	    {
+		    int x;
+		    int i,j;
+		    int pos = name - 'A' + 1; // 'A' -> 1, 'B' -> 2, 'C' -> 3
+		    int startPos = (pos-1)*(nDisc+3)+2;
+
+		    i = 0;
+            x = tower.getAt(i);
+		    while(x != 0)
+            {
+			    i++;
+			    for(j = startPos; j < startPos+x; j++) 
+                {
+				    screenArr[nDisc-i,j] = '*';
+			    }
+		    }
+	    }
+	    public void show() {
+		    int i,j;
+		    for(i = 0; i < nDisc+1; i++) 
+            {
+			    for(j = 0; j < 3*(nDisc+3); j++) 
+                {
+				    Console.Write("%c",screenArr[i,j]);
+			    }
+			    
+
+                return ;
+		    }
+	    }
+        public void printStack(char name,Stack x,Stack y,Stack z,Console1 screenArr)
+       {
+	    	    if (x.getName() == name)
+	    		    screenArr.drawDisc(name,x);
+	    	    if (y.getName() == name)
+	    		    screenArr.drawDisc(name,y);
+	    	    if (z.getName() == name)
+		    	    screenArr.drawDisc(name,z);
+
+           return ; 
+      }
+    }
+
+
+    class HanoiMove
+    {
+        public static void moveHanoi(int n, Stack from,Stack temp,Stack to,Console1 screenArr)
+        {
+	        if (n == 1) {
+		        int x = from.pop();
+		        to.push(x);
+		        screenArr.resetScreen();
+                screenArr.printStack('A', from, temp, to, screenArr);
+                screenArr.printStack('B', from, temp, to, screenArr);
+                screenArr.printStack('C', from, temp, to, screenArr);
+		        screenArr.show();
+		        return;
+	        }
+	        moveHanoi(n-1,from,to,temp,screenArr);
+	        moveHanoi(1,from,temp,to,screenArr);
+	        moveHanoi(n-1,temp,from,to,screenArr);
+        }
+
+    }
+        class Program
+        {
+            public void moveHanoi(int n, Stack from, Stack temp, Stack to, Console1 screenArr)
+            {
+                if (n == 1)
+                {
+                    int x = from.pop();
+                    to.push(x);
+                    screenArr.resetScreen();
+                    screenArr.printStack('A', from, temp, to, screenArr);
+                    screenArr.printStack('B', from, temp, to, screenArr);
+                    screenArr.printStack('C', from, temp, to, screenArr);
+                    screenArr.show();
+                    return;
+                }
+                moveHanoi(n - 1, from, to, temp, screenArr);
+                moveHanoi(1, from, temp, to, screenArr);
+                moveHanoi(n - 1, temp, from, to, screenArr);
+            }
+            static void Main(string[] args)
+            {
+                 int floor = 5;
+
+	            Stack a = new Stack('A', 5);
+                Stack b = new Stack('B', 5);
+                Stack c = new Stack('C', 5);
+
+                Console1 screenArr = new Console1(floor);
+
+	            a.push(5);
+	            a.push(4);
+	            a.push(3);
+	            a.push(2);
+	            a.push(1);
+
+	            screenArr.drawDisc('A',a);
+	            screenArr.show();
+
+                HanoiMove.moveHanoi(5, a, b, c, screenArr);
+            }
+        }
+}
+//퀵소트 머지소트 공부하기
+//사진은 열린 게시판 
+//소스코드는 과제및 평가란
