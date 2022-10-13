@@ -1,0 +1,125 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace StudentTest
+{
+    class Student {
+	    String name;
+	    int kor;
+	    int eng;
+	    int math;
+	    int total;
+	    double ave;
+        public Student(String[] data)
+        {
+            name = data[0];
+            kor = int.Parse(data[1]);
+            eng = int.Parse(data[2]);
+            math = int.Parse(data[3]);
+        }
+        public void calTotal()
+        {
+            total = kor + eng + math;
+        }
+        public void calAve()
+        {
+            ave = total / 3.0;
+        }
+        public void print()
+        {
+            Console.WriteLine(name + " " + kor + " " + eng + " " + math + " " + total + " " + ave);
+        }
+         public static void printAll(Student[] p)
+        {
+            for (int i = 0; i < p.Length; i++)
+            {
+                p[i].print();
+            }
+        }
+        public static void sortByTotal(Student []p)
+        {
+	        int i,j;
+            int n = p.Length;
+
+	        for(i = 0; i < n-1; i++) {
+		        for(j = 0; j < n-i-1; j++) {
+			        if (p[j].total > p[j+1].total) {
+				        Student tmp;
+
+				        tmp = p[j];
+				        p[j] = p[j+1];
+				        p[j+1] = tmp;
+			        }
+		        }
+	        }	
+        }   
+        public static void sortByName(Student []p)
+        {
+	        int i,j;
+            int n = p.Length;
+
+	        for(i = 0; i < n-1; i++) {
+		        for(j = 0; j < n-i-1; j++) {
+                    if (p[j].name.CompareTo(p[j+1].name) > 0) {
+				        Student tmp;
+
+				        tmp = p[j];
+				        p[j] = p[j+1];
+				        p[j+1] = tmp;
+			        }
+		        }
+	        }	
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Student[] s;
+            FileStream inputStream 
+                = new FileStream("data.txt",FileMode.Open,FileAccess.Read);
+            int n;
+            int i;
+            StreamReader reader = new StreamReader(inputStream);
+
+            n = int.Parse(reader.ReadLine());
+
+            s = new Student[n];
+
+	        for(i = 0; i < n; i++) {
+		        String buffer;
+
+                char []sep = new char[1];
+                sep[0] = ' ';
+
+                buffer = reader.ReadLine();
+                String[] data = buffer.Split(sep);
+
+                s[i] = new Student(data);
+	        }
+
+            for (i = 0; i < n; i++)
+            {
+                s[i].calTotal();
+                s[i].calAve();
+            }
+
+            Student.printAll(s);
+
+            Student.sortByTotal(s);
+
+            Student.printAll(s);
+
+            Student.sortByName(s);
+
+            Student.printAll(s);
+
+            reader.Close();
+            inputStream.Close();
+        }
+    }
+}
