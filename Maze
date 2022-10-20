@@ -1,0 +1,237 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Text.RegularExpressions;
+
+namespace mazetest1020_
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            int nRow;
+            int nCol;
+            FileStream file;
+            Maze maze = null;
+
+            file = new FileStream("data.txt", FileMode.Open, FileAccess.Read);
+            StreamReader reader = new StreamReader(file);
+
+            string temp = reader.ReadLine();
+            string[] numbers = temp.Split(' ');
+
+            nRow = int.Parse(numbers[0]);
+            nCol = int.Parse(numbers[1]);
+
+            maze = new Maze(nRow, nCol);
+
+            maze.loadMapFromFile(reader);
+            maze.printMap();
+
+            file.Close();
+
+            Position start = new Position(0, 0);
+            Position destination = new Position(nRow - 1, nCol - 1);
+            maze.findWay(start, destination);
+        }
+    }
+
+    class Position
+    {
+        public int x;
+        public int y;
+        public Position()
+        {
+            x = 0; y = 0;
+        }
+        public Position(int a, int b)
+        {
+            x = a; y = b;
+        }
+        public Position(Position pos)
+        {
+            x = pos.x;
+            y = pos.y;
+
+        }
+        public Boolean Equals(Position pos)
+        {
+            if (x == pos.x && y == pos.y)
+            { 
+                return true; 
+            }
+            return false;
+        }
+    }
+
+    class PositionStack
+    {
+        private static int MAXSTACK = 1000;
+        private int _top;
+        private Position[] _s;
+        public PositionStack()
+        {
+            _top = -1;
+            _s = new Position[MAXSTACK];
+        }
+        public void push(Position pos)
+        {
+            if (_top >= MAXSTACK - 1)
+            {
+                Console.WriteLine("stack overflow error");
+                Environment.Exit(-1);
+            }
+            _top++;
+            _s[_top] = new Position(pos);
+        }
+        public Position pop()
+        {
+            if (_top < 0)
+            {
+                Console.WriteLine("stack empty error");
+                Environment.Exit(-1);
+            }
+            _top--;
+            return _s[_top + 1];
+        }
+        public Position top()
+        {
+            if (_top < 0)
+            {
+                Console.WriteLine("stack empty error");
+                Environment.Exit(-1);
+            }
+            return _s[_top];
+        }
+        public void print()
+        {
+            if (_top < 0)
+            {
+                Console.WriteLine("stack empty error");
+                Environment.Exit(-1);
+            }
+            Console.WriteLine();
+            Console.WriteLine("=== Success !!! ===");
+            for (int i = 0; i <= _top; i++)
+            {
+                Console.WriteLine("(" + _s[i].x + "," + _s[i].y + ")");
+            }
+        }
+        public Boolean isEmpty()
+        {
+            if (_top == -1)
+            {
+                return true;
+            }
+            else return false;
+        }
+    }
+
+    class Maze
+    {
+        private int[,] _room;
+        private int[,] _visitedRoom;
+        private int _nRow;
+        private int _nCol;
+        private Position[] _offset;
+        public Maze(int r, int c)
+        {
+            _nRow = r;
+            _nCol = c;
+            _room = new int[_nRow, _nCol];
+            _visitedRoom = new int[_nRow, _nCol];
+            _offset = new Position[4];
+
+            for (int i = 0; i < 4; i++)
+            {
+                _offset[i] = new Position();
+            }
+
+            _offset[0].x = -1;
+            _offset[0].y = 0;
+            _offset[1].x = 0;
+            _offset[1].y = 1;
+            _offset[2].x = 1;
+            _offset[2].y = 0;
+            _offset[3].x = 0;
+            _offset[3].y = -1;
+        }
+        public void loadMapFromFile(StreamReader reader)
+        {
+            for (int i = 0; i < _nRow; i++)
+            {
+                string temp = reader.ReadLine();
+                string[] numbers = temp.Split(' ');
+
+                for (int j = 0; j < _nCol; j++)
+                {
+                    _room[i, j] = int.Parse(numbers[j]);
+                }
+            }
+
+        }
+        public void printMap()
+        {
+            for (int i = 0; i < _nRow; i++)
+            {
+                for (int j = 0; j < _nCol; j++)
+                {
+                    Console.Write(_room[i, j]);
+                }
+                Console.WriteLine();
+            }
+        }
+        public void findWay(Position start, Position destination)
+        {
+            int dir;
+
+            PositionStack stack = new PositionStack();
+
+            _visitedRoom[start.x, start.y] = 1;
+            stack.push(start);
+
+            while (!stack.isEmpty())
+            {
+                Position currentRoom = new Position(stack.top());
+
+                if (currentRoom.Equals(destination))
+                {
+                    Console.WriteLine("found");
+                    stack.print();
+                    return;
+                }
+                for (dir = 0; dir < 4; dir++)
+                {
+                    int nextX, nextY;
+
+                    nextX = currentRoom.x + _offset[dir].x;
+                    nextY = currentRoom.y + _offset[dir].y;
+
+                    if (nextX < 0 || nextX >= _nRow || nextY < 0 || nextY >= _nCol)
+                    {
+                        continue;
+                    }
+
+                    if (_room[nextX, nextY] == 1 || _visitedRoom[nextX, nextY] == 1)
+                    {
+                        continue;
+                    }
+                    _visitedRoom[nextX, nextY] = 1;
+                    currentRoom.x = nextX;
+                    currentRoom.y = nextY;
+                    stack.push(currentRoom);
+
+                    break;
+                }
+                if (dir >= 4)
+                {
+                    stack.pop();
+                }
+            }
+            Console.WriteLine("can't find exit");
+        }
+    }
+}
